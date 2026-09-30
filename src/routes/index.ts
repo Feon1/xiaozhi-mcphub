@@ -85,6 +85,15 @@ export const initRoutes = (app: express.Application): void => {
   // Health check endpoint (no auth required, accessible at /health)
   app.get('/health', healthCheck);
 
+  // Lightweight ping endpoint for external uptime monitors (Render wake-up)
+// Supports GET and HEAD to minimize response body size
+  app.get('/ping', (req, res) => {
+    res.json({ status: 'ok' });
+  });
+  app.head('/ping', (req, res) => {
+    res.status(200).end();
+  });
+
   // API routes protected by auth middleware in middlewares/index.ts
   router.get('/servers', getAllServers);
   router.get('/servers/:name', getServerConfig);
